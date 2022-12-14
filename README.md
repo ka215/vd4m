@@ -1,6 +1,8 @@
 # VD4M
 
-This is the web user interface with PHP as Video Downloader for Myself.
+This is the web user interface with PHP as **V**ideo **D**ownloader **For** **M**yself.
+
+![Screenshot Image](/../develop/screenshot.jpg?raw=true "Screenshot Image")
 
 ## Getting Start
 
@@ -27,3 +29,6 @@ This is the web user interface with PHP as Video Downloader for Myself.
 
 If you prepare lang file (JSON format) named same code of browser's accept language, you can translate to any language in web user interface as you likes.
 
+## License
+
+MIT License
