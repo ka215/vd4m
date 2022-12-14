@@ -1,0 +1,5 @@
+downloads/
+langs/*
+!langs/template.json
+.config
+debug.log
