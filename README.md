@@ -2,7 +2,7 @@
 
 This is the web user interface with PHP as **V**ideo **D**ownloader **For** **M**yself.
 
-![Screenshot Image](/../develop/screenshot.jpg?raw=true "Screenshot Image")
+![Screenshot Image](./screenshot.webp)
 
 ## Getting Start
 

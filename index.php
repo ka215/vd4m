@@ -1,4 +1,5 @@
 <?php
+set_time_limit( 5 * 60 );// unit is seconds
 require_once './functions.php';
 
 if ( session_status() !== PHP_SESSION_ACTIVE ) {
@@ -45,7 +46,8 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['action'] ) ) {
     $action        = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
     $title         = filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING );
     $url           = filter_input( INPUT_POST, 'url', FILTER_SANITIZE_URL );
-    $analyze_type  = filter_input( INPUT_POST, 'analyze_type', FILTER_SANITIZE_URL );
+    $playlist_item = filter_input( INPUT_POST, 'playlist_item', FILTER_SANITIZE_URL );
+    $analyze_type  = filter_input( INPUT_POST, 'analyze_type', FILTER_SANITIZE_STRING );
     $extension     = filter_input( INPUT_POST, 'extension', FILTER_SANITIZE_STRING );
     $format_code   = filter_input( INPUT_POST, 'format_code', FILTER_SANITIZE_STRING );
     $output_format = filter_input( INPUT_POST, 'output_format', FILTER_SANITIZE_STRING );
@@ -58,6 +60,7 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['action'] ) ) {
                 list( $base_url, ) = explode( '?', $target_url );
                 logger( $_POST, $analyze_type, $target_url, $params, $base_url );
                 if ( array_key_exists( 'list', $params ) && 'playlist' === $analyze_type ) {
+                    // Retrieve playlist
                     $target_url = $base_url .'?'. http_build_query( [ 'list' => $params['list'] ] );
                     $res = exec_dl( [ '--flat-playlist -j', $target_url ] );
                     if ( $res['status'] ) {
@@ -67,9 +70,13 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['action'] ) ) {
                         $res['message'] = 'Failed to retrieve play-list data.';
                     }
                 } else {
-                    if ( isset( $params['v'] ) ) {
+                    // Retrieve one media
+                    if ( isset( $playlist_item ) && !empty( $playlist_item ) ) {
+                        $target_url = $playlist_item;
+                    } elseif ( isset( $params['v'] ) ) {
                         $target_url = $base_url .'?'. http_build_query( [ 'v' => $params['v'] ] );
                     }
+                    logger( 'Get a media', $target_url );
                     $res = exec_dl( [ '-F', $target_url ] );
                     if ( $res['status'] ) {
                         $details['format'] = get_format_list( $res['response'] );

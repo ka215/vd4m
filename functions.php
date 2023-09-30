@@ -128,7 +128,8 @@ function exec_dl( $options ) {
             }
         }
     }
-    logger( __FUNCTION__, $cmd, $result, implode( PHP_EOL, $verbose ), $dest_file_path, $dest_file_name );
+    $verbose_log = str_replace( [ "\r\n", "\r", "\n" ], "\n", implode( PHP_EOL, $verbose ) );
+    logger( __FUNCTION__, $cmd, $result, $verbose_log, $dest_file_path, $dest_file_name );
     return [
         'status'      => $result == 0,
         'response'    => $verbose,
@@ -139,7 +140,7 @@ function exec_dl( $options ) {
     ];
 }
 
-function edit( array $options ): mixed {
+function edit( array $options ): array {
     global $opts;
     if ( !is_array( $options ) ) {
         $option_str = (string)$options;
@@ -168,12 +169,12 @@ function __( string $text ): string {
     if ( !empty( $opts['translations'] ) && isset( $opts['translations'][$text] ) && !empty( $opts['translations'][$text] ) ) {
         return $opts['translations'][$text];
     } else {
-        logger( $text );
+        //logger( $text );
         return $text;
     }
 }
 
-function logger( mixed ...$args ): void {
+function logger( ...$args ): void {
     global $opts;
     if ( $opts['debug'] ) {
         error_log( json_encode( $args, JSON_PRETTY_PRINT ), 3, './debug.log' );
